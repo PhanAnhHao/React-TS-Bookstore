@@ -3,7 +3,7 @@ import { App, Button, Divider, Form, Input } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./register.scss";
-import { RegisterApi } from '@/services/api';
+import { registerApi } from '@/services/api';
 
 type FieldType = {
     fullName: string;
@@ -24,7 +24,7 @@ const RegisterPage = () => {
         console.log('Success:', values);
         const { email, fullName, password, phone } = values;
 
-        const res = await RegisterApi(email, fullName, password, phone);
+        const res = await registerApi(email, fullName, password, phone);
         console.log({ res });
         if (res.data) {
             // success
