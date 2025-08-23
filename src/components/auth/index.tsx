@@ -1,7 +1,7 @@
 import React from "react";
 import { useCurrentApp } from "../context/app.context";
 import { Button, Result } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 interface IProps {
@@ -10,15 +10,17 @@ interface IProps {
 
 const ProtectedRoute = (props: IProps) => {
     const { isAuthenticated, user } = useCurrentApp();
-    const navigate = useNavigate();
+    console.log(user);
     const location = useLocation();
     if (isAuthenticated === false) {
         return (
             <Result
                 status="404"
-                title="404"
-                subTitle="Sorry, the page you visited does not exist."
-                extra={<Button onClick={() => navigate('/')} type="primary">Back Home</Button>}
+                title="Chưa đăng nhập"
+                subTitle="Vui lòng đăng nhập để sử dụng tính năng nay."
+                extra={<Button type="primary">
+                    <Link to="/login">Đăng nhập</Link>
+                </Button>}
             />
         )
     }
@@ -32,7 +34,9 @@ const ProtectedRoute = (props: IProps) => {
                     status="403"
                     title="403"
                     subTitle="Sorry, you are not authorized to access this page."
-                    extra={<Button onClick={() => navigate('/')} type="primary">Back Home</Button>}
+                    extra={<Button type="primary">
+                        <Link to={"/"}>Back Home</Link>
+                    </Button>}
                 />
             )
         }

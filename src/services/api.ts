@@ -22,3 +22,8 @@ export const fetchAccountApi = async () => {
         }
     });
 }
+
+export const logoutApi = async () => {
+    const urlBackend = "/api/v1/auth/logout";
+    return axios.post<IBackendRes<IRegister>>(urlBackend);
+}
