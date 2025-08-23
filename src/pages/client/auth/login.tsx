@@ -4,6 +4,7 @@ import './login.scss';
 import { useState } from 'react';
 import type { FormProps } from 'antd';
 import { loginApi } from '@/services/api';
+import { useCurrentApp } from '@/components/context/app.context';
 
 type FieldType = {
     username: string;
@@ -15,6 +16,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
+    const { setIsAuthenticated, setUser } = useCurrentApp();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { username, password } = values;
@@ -22,6 +24,8 @@ const LoginPage = () => {
         const res = await loginApi(username, password);
         setIsSubmit(false);
         if (res?.data) {
+            setIsAuthenticated(true);
+            setUser(res.data.user);
             localStorage.setItem('access_token', res.data.access_token);
             message.success('Đăng nhập tài khoản thành công!');
             navigate('/')
