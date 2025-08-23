@@ -13,6 +13,10 @@ import 'styles/global.scss';
 import HomePage from 'pages/client/home';
 import { App } from 'antd';
 import { AppProvider } from 'components/context/app.context';
+import ProtectedRoute from '@/components/auth';
+// mẹo(để đỡ bị trùng tên):
+// tại vì rename từ auth về thành index nên đường link ngắn hơn và đỡ bị trùng tên
+// components/auth/auth => @/components/auth
 
 const router = createBrowserRouter([
   {
@@ -27,6 +31,24 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        path: "/checkout",
+        element: ( // dấu ngoặc tròn có nghĩa là tất cả khối code viết bên trong này chính là return chỗ này
+          <ProtectedRoute>
+            <div>
+              checkout page
+            </div>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRoute>
+            <div>admin page</div>
+          </ProtectedRoute>
+        ),
       },
     ]
   },
