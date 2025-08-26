@@ -6,10 +6,12 @@ import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
+import CreateUser from './create.user';
 
 
 
-
+// tạo thêm type để truyển thêm kiểu xuống params, thì lúc này gõ params thì sẽ gợi ý thêm trường thông tin
+// sau này muốn tìm kiếm theo các tiêu chí gì thì định nghĩa 1 biến ra ngoài(type/interface) nhờ đó TS sẽ gợi ý code
 type TSearch = {
     fullName: string;
     email: string;
@@ -28,6 +30,8 @@ const TableUser = () => {
 
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
+
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const columns: ProColumns<IUserTable>[] = [
         {
@@ -98,6 +102,11 @@ const TableUser = () => {
         }
     ];
 
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
+
+
     return (
         <>
             <ProTable<IUserTable, TSearch>
@@ -154,7 +163,7 @@ const TableUser = () => {
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
-                            actionRef.current?.reload();
+                            setOpenModalCreate(true);
                         }}
                         type="primary"
                     >
@@ -168,6 +177,11 @@ const TableUser = () => {
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+            <CreateUser
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
             />
         </>
     );
