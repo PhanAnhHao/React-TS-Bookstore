@@ -10,6 +10,7 @@ import CreateUser from './create.user';
 import { CSVLink } from 'react-csv';
 import ImportUser from './data/import.user';
 import UpdateUser from './update.user';
+import dayjs from 'dayjs';
 
 // tạo thêm type để truyển thêm kiểu xuống params, thì lúc này gõ params thì sẽ gợi ý thêm trường thông tin
 // sau này muốn tìm kiếm theo các tiêu chí gì thì định nghĩa 1 biến ra ngoài(type/interface) nhờ đó TS sẽ gợi ý code
@@ -95,6 +96,13 @@ const TableUser = () => {
             valueType: 'date',
             sorter: true,
             hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        {dayjs(entity.createdAt).format("DD-MM-YYYY")}
+                    </>
+                )
+            },
         },
         {
             title: 'Created At',
