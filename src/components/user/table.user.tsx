@@ -1,12 +1,14 @@
 import { getUsersApi } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
-import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
 import CreateUser from './create.user';
+import { CSVLink } from 'react-csv';
+import ImportUser from './data/import.user';
 
 
 
@@ -32,6 +34,9 @@ const TableUser = () => {
     const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+
+    const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
 
     const columns: ProColumns<IUserTable>[] = [
         {
@@ -159,6 +164,26 @@ const TableUser = () => {
                 }}
                 headerTitle="Table user"
                 toolBarRender={() => [
+                    <CSVLink
+                        data={currentDataTable}
+                        filename='export-user.csv'
+                    >
+                        <Button
+                            icon={<ExportOutlined />}
+                            type="primary"
+                        >
+                            Export
+                        </Button>
+                    </CSVLink>
+                    ,
+
+                    <Button
+                        icon={<CloudUploadOutlined />}
+                        type="primary"
+                        onClick={() => setOpenModalImport(true)}
+                    >
+                        Import
+                    </Button>,
                     <Button
                         key="button"
                         icon={<PlusOutlined />}
@@ -181,6 +206,11 @@ const TableUser = () => {
             <CreateUser
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+            <ImportUser
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
                 refreshTable={refreshTable}
             />
         </>
