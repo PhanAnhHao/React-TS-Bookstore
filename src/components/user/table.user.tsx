@@ -2,15 +2,14 @@ import { getUsersApi } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
+import { ProTable } from '@ant-design/pro-components';
+import { Button } from 'antd';
 import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
 import CreateUser from './create.user';
 import { CSVLink } from 'react-csv';
 import ImportUser from './data/import.user';
-
-
+import UpdateUser from './update.user';
 
 // tạo thêm type để truyển thêm kiểu xuống params, thì lúc này gõ params thì sẽ gợi ý thêm trường thông tin
 // sau này muốn tìm kiếm theo các tiêu chí gì thì định nghĩa 1 biến ra ngoài(type/interface) nhờ đó TS sẽ gợi ý code
@@ -25,7 +24,7 @@ const TableUser = () => {
     const actionRef = useRef<ActionType>();
     const [meta, setMeta] = useState({
         current: 1,
-        pageSize: 3,
+        pageSize: 5,
         pages: 0,
         total: 0
     });
@@ -37,6 +36,9 @@ const TableUser = () => {
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
 
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
 
     const columns: ProColumns<IUserTable>[] = [
         {
@@ -90,9 +92,10 @@ const TableUser = () => {
                     <>
                         <EditTwoTone
                             twoToneColor="#f57800"
-                            style={{
-                                cursor: "pointer",
-                                marginRight: 15
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
                             }}
                         />
                         <DeleteTwoTone
@@ -198,21 +201,32 @@ const TableUser = () => {
 
                 ]}
             />
+
             <DetailUser
                 openViewDetail={openViewDetail}
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
             />
+
             <CreateUser
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
             />
+
             <ImportUser
                 openModalImport={openModalImport}
                 setOpenModalImport={setOpenModalImport}
                 refreshTable={refreshTable}
+            />
+
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
             />
         </>
     );
