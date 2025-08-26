@@ -14,7 +14,7 @@ import { Buffer } from 'buffer';
  * React (frontend): phải import { Buffer } from "buffer" vì trình duyệt không có sẵn.
  */
 import { bulkCreateUserAPI } from "@/services/api";
-// import templateFile from "assets/template/user.xlsx?url";
+import templateFile from "assets/template/user.xlsx?url"; // vì đây ko phải là file ảnh nên cần phải thêm "?url", đây là ngtắc khi hđ với vite
 const { Dragger } = Upload;
 
 interface IProps {
@@ -159,8 +159,8 @@ const ImportUser = (props: IProps) => {
                         Support for a single upload. Only accept .csv, .xls, .xlsx . or
                         &nbsp;
                         <a
-                            onClick={e => e.stopPropagation()}
-                            // href={templateFile}
+                            onClick={e => e.stopPropagation()} // thêm vào tránh trường hợp bấm vào download file thì mở cả popup thêm mới file
+                            href={templateFile}
                             download
                         >
                             Download Sample File

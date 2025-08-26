@@ -144,6 +144,7 @@ const TableUser = () => {
                     const res = await getUsersApi(query);
                     if (res.data) {
                         setMeta(res.data.meta);
+                        setCurrentDataTable(res.data?.result ?? []);
                     }
                     return {
                         // data: data.data,
