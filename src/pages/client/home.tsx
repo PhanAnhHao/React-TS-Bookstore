@@ -307,6 +307,7 @@ const HomePage = () => {
                     </Row>
                 </div>
             </div>
+
             <MobileFilter
                 isOpen={showMobileFilter}
                 setIsOpen={setShowMobileFilter}

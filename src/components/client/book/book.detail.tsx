@@ -17,6 +17,8 @@ interface IImageGallery {
     thumbnailClass: string;
 }
 
+type TUserAction = "MINUS" | "PLUS";
+
 const BookDetail = (props: IProps) => {
     const { currentBook } = props;
     // const [imageGallery, setImageGallery] = useState<{
@@ -27,12 +29,13 @@ const BookDetail = (props: IProps) => {
     // }[]>([])
     const [imageGallery, setImageGallery] = useState<IImageGallery[]>([]);
 
-    const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isOpenModalGallery, setIsOpenModalGallery] = useState<boolean>(false);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
 
     const refGallery = useRef<ImageGallery>(null); // cần biến ref để can thiệp vào các component, sd trực tiếp component
     // nếu tư duy theo lập trình hướng đối tượng thì thì phải cần tạo mới 1 đối tượng => dùng keyword new rồi mới gọi tới nhứng func của nó
     // tuy nhiên đây là code giao diện, dùng react, với react tất cả đều là component, ko có khái niệm class => vì vậy cần thông qua biến ref
+    const [currentQuantity, setCurrentQuantity] = useState<number>(1);
 
     // const images = [
     //     {
@@ -127,6 +130,25 @@ const BookDetail = (props: IProps) => {
         setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0); // biến ref để sử dụng func getCurrentIndex()
     }
 
+    const handleChangeButton = (type: TUserAction) => {
+        if (type === 'MINUS') {
+            if (currentQuantity - 1 <= 0) return;
+            setCurrentQuantity(currentQuantity - 1);
+        }
+        if (type === 'PLUS' && currentBook) {
+            if (currentQuantity === +currentBook.quantity) return; //max
+            setCurrentQuantity(currentQuantity + 1);
+        }
+    }
+
+    const handleChangeInput = (value: string) => {
+        console.log({ value });
+        if (!isNaN(+value)) {
+            if (+value > 0 && currentBook && +value < +currentBook.quantity) {
+                setCurrentQuantity(+value);
+            }
+        }
+    }
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -180,9 +202,9 @@ const BookDetail = (props: IProps) => {
                                 <div className='quantity'>
                                     <span className='left'>Số lượng</span>
                                     <span className='right'>
-                                        <button ><MinusOutlined /></button>
-                                        <input defaultValue={1} />
-                                        <button><PlusOutlined /></button>
+                                        <button onClick={() => handleChangeButton('MINUS')} ><MinusOutlined /></button>
+                                        <input onChange={(event) => handleChangeInput(event.target.value)} value={currentQuantity} />
+                                        <button onClick={() => handleChangeButton('PLUS')}><PlusOutlined /></button>
                                     </span>
                                 </div>
                                 <div className='buy'>
