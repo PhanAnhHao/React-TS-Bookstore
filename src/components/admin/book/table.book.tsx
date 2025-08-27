@@ -8,6 +8,7 @@ import { dateRangeValidate } from '@/services/helper';
 import { getBooksAPI } from '@/services/api';
 import DetailBook from './detail.book';
 import CreateBook from './create.book';
+import UpdateBook from './update.book';
 
 
 type TSearch = {
@@ -239,6 +240,14 @@ const TableBook = () => {
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
+            />
+
+            <UpdateBook
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
             />
 
         </>
