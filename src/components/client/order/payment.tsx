@@ -1,9 +1,10 @@
-import { Col, Divider, Form, Radio, Row, Space } from 'antd';
+import { App, Button, Col, Divider, Form, Radio, Row, Space } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { FormProps } from 'antd';
+import { createOrderAPI } from '@/services/api';
 
 const { TextArea } = Input;
 
@@ -26,6 +27,8 @@ const Payment = (props: IProps) => {
     const [form] = Form.useForm();
 
     const [isSubmit, setIsSubmit] = useState(false);
+    const { message, notification } = App.useApp();
+    const { setCurrentStep } = props;
 
     useEffect(() => {
         if (user) {
@@ -64,6 +67,32 @@ const Payment = (props: IProps) => {
 
     const handlePlaceOrder: FormProps<FieldType>['onFinish'] = async (values) => {
         console.log(values)
+        const { address, fullName, method, phone } = values;
+        const detail = carts.map(item => ({
+            _id: item._id,
+            quantity: item.quantity,
+            bookName: item.detail.mainText
+        }))
+
+        setIsSubmit(true);
+        const res = await createOrderAPI(
+            fullName, address, phone, totalPrice, method, detail
+        );
+        if (res?.data) {
+            localStorage.removeItem("carts");
+            setCarts([]);
+            message.success('Mua hàng thành công!');
+            setCurrentStep(2);
+        } else {
+            notification.error({
+                message: "Có lỗi xảy ra",
+                description:
+                    res.message && Array.isArray(res.message) ? res.message[0] : res.message,
+                duration: 5
+            })
+        }
+
+        setIsSubmit(false);
     }
 
 
@@ -102,7 +131,7 @@ const Payment = (props: IProps) => {
                 })}
                 <div><span
                     style={{ cursor: "pointer" }}
-                    onClick={() => props.setCurrentStep(0)}>
+                    onClick={() => setCurrentStep(0)}>
                     Quay trở lại
                 </span>
                 </div>
@@ -172,7 +201,13 @@ const Payment = (props: IProps) => {
                             </span>
                         </div>
                         <Divider style={{ margin: "10px 0" }} />
-                        <button type="submit">Đặt Hàng ({carts?.length ?? 0})</button>
+                        <Button
+                            color="danger" variant="solid"
+                            htmlType='submit' // thêm htmlType='submit' tương ứng với cái <button type="submit">
+                            loading={isSubmit}
+                        >
+                            Đặt Hàng ({carts?.length ?? 0})
+                        </Button>
                     </div>
                 </Form>
 
