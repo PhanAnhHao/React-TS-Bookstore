@@ -24,6 +24,7 @@ import ManageUserPage from 'pages/admin/manage.user';
 import LayoutAdmin from '@/components/layout/layout.admin';
 import enUS from 'antd/locale/en_US';
 import OrderPage from './pages/client/order';
+import HistoryPage from './pages/client/history';
 // import viVN from 'antd/locale/vi_VN';
 
 const router = createBrowserRouter([
@@ -51,10 +52,10 @@ const router = createBrowserRouter([
         element: <AboutPage />,
       },
       {
-        path: "/checkout",
+        path: "/history",
         element: (  // dấu ngoặc tròn có nghĩa là tất cả khối code viết bên trong này chính là return chỗ này
           <ProtectedRoute>
-            <div>checkout page</div>
+            <HistoryPage />
           </ProtectedRoute>
         ),
       }
