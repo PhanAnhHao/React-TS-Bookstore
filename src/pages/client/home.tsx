@@ -4,7 +4,7 @@ import { FilterTwoTone, ReloadOutlined } from '@ant-design/icons';
 import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin } from 'antd';
 import type { FormProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import 'styles/home.scss';
 
 type FieldType = {
@@ -16,6 +16,7 @@ type FieldType = {
 };
 
 const HomePage = () => {
+    const [searchTerm] = useOutletContext() as any;
 
     const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchBook();
-    }, [current, pageSize, filter, sortQuery]);
+    }, [current, pageSize, filter, sortQuery, searchTerm]);
 
     const fetchBook = async () => {
         setIsLoading(true)
@@ -60,6 +61,10 @@ const HomePage = () => {
         }
         if (sortQuery) {
             query += `&${sortQuery}`;
+        }
+
+        if (searchTerm) {
+            query += `&mainText=/${searchTerm}/i`;
         }
 
         const res = await getBooksAPI(query);
